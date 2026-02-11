@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from .auth import router as auth_router
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
+from db import create_tables
 
 app = FastAPI()
 
@@ -21,3 +22,7 @@ if __name__ == "__main__":
 @app.get("/")
 def home():
     return {"message": "Gate Pass System Backend is Running 🚀"}
+
+@app.on_event("startup")
+def startup():
+    create_tables()
