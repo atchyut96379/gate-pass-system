@@ -24,7 +24,7 @@ document.getElementById("visitorForm").addEventListener("submit", async function
   }
 
   try {
-    const res = await fetch("http://127.0.0.1:8000/resident/create-visitor", {
+    const res = await fetch("https://gate-pass-system-auhy.onrender.com/resident/create-visitor", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

@@ -5,7 +5,7 @@ async function verifyOtp() {
     verified_by: 3   // security user id (session later)
   };
 
-  const res = await fetch("http://127.0.0.1:8000/security/verify-otp", {
+  const res = await fetch("https://gate-pass-system-auhy.onrender.com/security/verify-otp", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data)
@@ -24,6 +24,4 @@ async function verifyOtp() {
   result.innerText = msg.message;
   result.style.color = "green";
 }
-function goBack() {
-  window.location.href = "security.html";
-}
+
