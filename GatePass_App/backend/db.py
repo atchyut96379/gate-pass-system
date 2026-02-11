@@ -43,6 +43,16 @@ def create_tables():
     );
     """)
 
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS entry_logs (
+        id SERIAL PRIMARY KEY,
+        visitor_id INTEGER REFERENCES visitors(id),
+        entry_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        exit_time TIMESTAMP,
+        status VARCHAR(20)
+    );
+    """)
+
     conn.commit()
     cursor.close()
     conn.close()
