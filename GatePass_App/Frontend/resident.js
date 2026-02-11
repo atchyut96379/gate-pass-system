@@ -1,6 +1,8 @@
+const API_BASE = "https://gate-pass-system-auhy.onrender.com";
+
 document.getElementById("visitorForm").addEventListener("submit", async function(e) {
 
-  e.preventDefault();   // Stop default submit
+  e.preventDefault();
 
   const vname = document.getElementById("vname").value.trim();
   const vphone = document.getElementById("vphone").value.trim();
@@ -8,14 +10,12 @@ document.getElementById("visitorForm").addEventListener("submit", async function
   const flat = document.getElementById("flat").value.trim();
   const msg = document.getElementById("otpMsg");
 
-  // ✅ EMPTY VALIDATION
   if (!vname || !vphone || !purpose || !flat) {
     msg.innerText = "Please fill all fields before generating OTP.";
     msg.style.color = "red";
     return;
   }
 
-  // ✅ PHONE VALIDATION
   const phoneRegex = /^[0-9]{10}$/;
   if (!phoneRegex.test(vphone)) {
     msg.innerText = "Enter valid 10-digit phone number.";
@@ -24,7 +24,7 @@ document.getElementById("visitorForm").addEventListener("submit", async function
   }
 
   try {
-    const res = await fetch("https://gate-pass-system-auhy.onrender.com/resident/create-visitor", {
+    const res = await fetch(`${API_BASE}/resident/create-visitor`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -36,13 +36,13 @@ document.getElementById("visitorForm").addEventListener("submit", async function
       })
     });
 
+    const result = await res.json();
+
     if (!res.ok) {
-      msg.innerText = "Error creating visitor pass.";
+      msg.innerText = result.detail || "Error creating visitor pass.";
       msg.style.color = "red";
       return;
     }
-
-    const result = await res.json();
 
     msg.innerText = `OTP: ${result.otp} (valid for 5 mins)`;
     msg.style.color = "green";
@@ -53,5 +53,4 @@ document.getElementById("visitorForm").addEventListener("submit", async function
     msg.innerText = "Server error. Try again.";
     msg.style.color = "red";
   }
-
 });
