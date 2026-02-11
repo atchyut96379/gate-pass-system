@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from datetime import datetime, timedelta
 import random
-from db import get_connection
+from .db import get_connection
 
 router = APIRouter()
 
