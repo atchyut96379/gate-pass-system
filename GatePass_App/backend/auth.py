@@ -48,7 +48,7 @@ def login(data: LoginRequest):
     cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT Name, Role FROM Users WHERE Email=? AND Password=?",
+        "SELECT name, role FROM users WHERE email=%s AND password=%s",
         (data.email, data.password)
     )
 
@@ -58,10 +58,9 @@ def login(data: LoginRequest):
     if not user:
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
-    name, role = user
     return {
-        "name": name,
-        "role": role
+        "name": user[0],
+        "role": user[1]
     }
 
 
@@ -78,8 +77,8 @@ def create_user(data: CreateUserRequest):
     cursor = conn.cursor()
 
     cursor.execute("""
-        INSERT INTO Users (Name, Email, Password, Phone, FlatNumber, Role)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO users (name, email, password, phone, flatnumber, role)
+        VALUES (%s, %s, %s, %s, %s, %s)
     """, (
         data.name,
         data.email,
@@ -108,9 +107,9 @@ def create_visitor(data: CreateVisitorRequest):
     cursor = conn.cursor()
 
     cursor.execute("""
-        INSERT INTO Visitors
-        (VisitorName, VisitorPhone, Purpose, FlatNumber, OTP, OTPExpiry, Status, CreatedBy)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO visitors
+        (visitorname, visitorphone, purpose, flatnumber, otp, otpexpiry, status, createdby)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
     """, (
         data.visitor_name,
         data.visitor_phone,
@@ -142,9 +141,9 @@ def verify_otp(data: VerifyOtpRequest):
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT VisitorId, OTPExpiry, Status
-        FROM Visitors
-        WHERE FlatNumber=? AND OTP=?
+        SELECT visitorid, otpexpiry, status
+        FROM visitors
+        WHERE flatnumber=%s AND otp=%s
     """, (data.flat_number, data.otp))
 
     visitor = cursor.fetchone()
@@ -161,8 +160,8 @@ def verify_otp(data: VerifyOtpRequest):
 
     if datetime.now() > expiry:
         cursor.execute(
-            "UPDATE Visitors SET Status='EXPIRED' WHERE VisitorId=?",
-            visitor_id
+            "UPDATE visitors SET status='EXPIRED' WHERE visitorid=%s",
+            (visitor_id,)
         )
         conn.commit()
         conn.close()
@@ -170,19 +169,20 @@ def verify_otp(data: VerifyOtpRequest):
 
     # APPROVE ENTRY
     cursor.execute(
-        "UPDATE Visitors SET Status='APPROVED' WHERE VisitorId=?",
-        visitor_id
+        "UPDATE visitors SET status='APPROVED' WHERE visitorid=%s",
+        (visitor_id,)
     )
 
     cursor.execute("""
-        INSERT INTO EntryLogs (VisitorId, VerifiedBy, Status)
-        VALUES (?, ?, ?)
+        INSERT INTO entrylogs (visitorid, verifiedby, status)
+        VALUES (%s, %s, %s)
     """, (visitor_id, data.verified_by, "APPROVED"))
 
     conn.commit()
     conn.close()
 
     return {"message": "Visitor entry approved"}
+
 
 @router.get("/admin-security/visitor-history")
 def all_visitor_history():
@@ -191,14 +191,14 @@ def all_visitor_history():
 
     cursor.execute("""
         SELECT
-            VisitorName,
-            VisitorPhone,
-            Purpose,
-            FlatNumber,
-            Status,
-            CreatedAt
-        FROM Visitors
-        ORDER BY CreatedAt DESC
+            visitorname,
+            visitorphone,
+            purpose,
+            flatnumber,
+            status,
+            createdat
+        FROM visitors
+        ORDER BY createdat DESC
     """)
 
     rows = cursor.fetchall()
