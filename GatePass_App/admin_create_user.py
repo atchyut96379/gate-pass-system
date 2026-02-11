@@ -13,35 +13,35 @@ def get_connection():
     )
 
 # ---------------- LOGIC ----------------
-def create_user():
-    name = name_entry.get()
-    email = email_entry.get()
-    password = password_entry.get()
-    phone = phone_entry.get()
-    flat = flat_entry.get()
-    role = role_var.get()
-
-    if not name or not email or not password or not role:
-        messagebox.showerror("Error", "Please fill all required fields")
-        return
+@router.post("/admin/create-user")
+def create_user(user: UserCreate):
+    conn = get_connection()
+    cursor = conn.cursor()
 
     try:
-        conn = get_connection()
-        cursor = conn.cursor()
-
         cursor.execute("""
-            INSERT INTO Users (Name, Email, Password, Phone, FlatNumber, Role)
-            VALUES (?, ?, ?, ?, ?, ?)
-        """, (name, email, password, phone, flat, role))
+            INSERT INTO users (name, email, password, role, phone, flatnumber)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """, (
+            user.name,
+            user.email,
+            user.password,
+            user.role,
+            user.phone,
+            user.flat_number
+        ))
 
         conn.commit()
-        conn.close()
-
-        messagebox.showinfo("Success", f"{role} created successfully")
-        clear_fields()
+        return {"message": "User created successfully"}
 
     except Exception as e:
-        messagebox.showerror("Database Error", str(e))
+        conn.rollback()
+        print("Error:", e)
+        raise HTTPException(status_code=500, detail="Error creating user")
+
+    finally:
+        cursor.close()
+        conn.close()
 
 def clear_fields():
     name_entry.delete(0, tk.END)
