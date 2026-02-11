@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
+from .db import create_tables;
 
 # ✅ Correct relative import
 from .auth import router as auth_router
@@ -27,3 +28,5 @@ def home():
 # Local run
 if __name__ == "__main__":
     uvicorn.run("GatePass_App.backend.main:app", host="0.0.0.0", port=8000)
+
+create_tables()
