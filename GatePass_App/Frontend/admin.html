@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+
+  <script>
+    const role = localStorage.getItem("userRole");
+
+    if (!role || role.toUpperCase() !== "ADMIN") {
+      alert("Access denied. Admins only.");
+      localStorage.clear();
+      window.location.href = "index.html";
+    }
+  </script>
+</head>
+
+<body>
+
+<div class="top-bar">
+  <span class="welcome-text">
+    Welcome, <b id="userName"></b>
+  </span>
+</div>
+
+<h1 class="page-title">Admin Dashboard</h1>
+
+<div class="card">
+  <h2>Manage Users</h2>
+
+  <!-- Visitor History Button -->
+  <div class="admin-actions">
+    <button class="secondary-btn" onclick="window.location.href='admin_history.html'">
+      📋 Visitor History
+    </button>
+  </div>
+
+  <hr style="margin:20px 0">
+
+  <!-- Creating Profile For -->
+  <h3 style="text-align:center; margin-bottom:10px;">Creating Profile For:</h3>
+
+  <select id="roleSelect" onchange="toggleFlatField()">
+    <option value="RESIDENT">Resident</option>
+    <option value="SECURITY">Security</option>
+  </select>
+
+  <!-- Create User Form -->
+  <form id="createUserForm">
+
+    <input type="text" id="name" placeholder="Name" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <input type="text" id="phone" placeholder="Phone" required>
+
+    <input type="text" id="flatNumber" placeholder="Flat Number">
+
+    <!-- Side-by-side buttons -->
+    <div class="button-row">
+      <button class="primary-btn" type="submit">Create User</button>
+      <button type="button" class="logout-btn" onclick="logout()">Logoff</button>
+    </div>
+
+  </form>
+</div>
+
+<script src="admin.js"></script>
+
+<script>
+  function logout() {
+    localStorage.clear();
+    window.location.href = "index.html";
+  }
+
+  document.getElementById("userName").innerText =
+    localStorage.getItem("userName") || "Admin";
+
+  function toggleFlatField() {
+    const role = document.getElementById("roleSelect").value;
+    const flatField = document.getElementById("flatNumber");
+
+    if (role === "SECURITY") {
+      flatField.style.display = "none";
+      flatField.removeAttribute("required");
+    } else {
+      flatField.style.display = "block";
+      flatField.setAttribute("required", true);
+    }
+  }
+
+  toggleFlatField();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Security Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+
+  <script>
+    const role = localStorage.getItem("userRole");
+
+    if (!role || role !== "SECURITY") {
+        alert("Access denied. Security only.");
+        window.location.href = "index.html";
+    }
+  </script>
+</head>
+
+<body>
+
+<div class="top-bar">
+  <span class="welcome-text">
+    Welcome, <b id="userName"></b>
+  </span>
+</div>
+
+<h1 class="title">Security Dashboard</h1>
+
+<div class="card">
+  <h2>Verify Visitor OTP</h2>
+
+  <!-- ✅ FIXED BUTTON -->
+  <button class="signin" onclick="window.location.href='visitor_history.html'">
+    View Visitor Log
+  </button>
+
+  <input id="flat" placeholder="Flat Number">
+  <input id="otp" placeholder="OTP">
+
+  <div class="button-row">
+    <button class="primary-btn" onclick="verifyOtp()">Verify Entry</button>
+    <button class="logout-btn" onclick="logout()">Logoff</button>
+  </div>
+
+  <p id="result"></p>
+</div>
+
+<script src="security.js"></script>
+<script src="common.js"></script>
+
+<script>
+  document.getElementById("userName").innerText =
+    localStorage.getItem("userName") || "User";
+</script>
+
+</body>
+</html>

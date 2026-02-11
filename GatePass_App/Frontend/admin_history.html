@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Visitor History</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="top-bar"></div>
+
+<h1 class="title">Visitor History</h1>
+
+<div class="card">
+  <div class="table-container">
+    <table class="history-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Purpose</th>
+          <th>Flat</th>
+          <th>Status</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody id="historyTable"></tbody>
+    </table>
+  </div>
+
+  <button class="back-btn" onclick="goBack()">&larr; Back</button>
+</div>
+
+<script src="admin_history.js"></script>
+
+<script>
+function goBack() {
+    window.location.href = "admin.html";
+}
+</script>
+
+</body>
+</html>

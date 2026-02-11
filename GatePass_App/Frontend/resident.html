@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Resident Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="top-bar">
+  <span class="welcome-text">
+    Welcome, <b id="userName"></b>
+  </span>
+</div>
+
+<h1 class="title">Resident Dashboard</h1>
+
+<div class="card">
+  <h2>Create Visitor Pass</h2>
+
+  <!-- ✅ FORM ADDED HERE -->
+  <form id="visitorForm">
+
+    <input id="vname" placeholder="Visitor Name" required>
+    <input id="vphone" placeholder="Visitor Phone" required>
+    <input id="purpose" placeholder="Purpose" required>
+    <input id="flat" placeholder="Flat Number" required>
+
+    <div class="button-row">
+      <!-- ✅ Removed onclick -->
+      <button type="submit" class="primary-btn">Generate OTP</button>
+      <button type="button" class="logout-btn" onclick="logout()">Logoff</button>
+    </div>
+
+  </form>
+
+  <p id="otpMsg"></p>
+</div>
+
+<script src="resident.js"></script>
+<script src="common.js"></script>
+
+<script>
+  document.getElementById("userName").innerText =
+    localStorage.getItem("userName") || "User";
+</script>
+
+</body>
+</html>

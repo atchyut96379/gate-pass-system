@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gate Pass System</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <h1 class="title">Gate Pass System</h1>
+  <p class="subtitle">Secure Visitor Entry Management for Apartments</p>
+
+  <!-- Role Tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="selectRole('RESIDENT', this)">Resident</button>
+    <button class="tab" onclick="selectRole('SECURITY', this)">Security</button>
+  </div>
+
+  <!-- Admin Login Link -->
+  <div class="admin-login-link">
+    <a href="admin_login.html">Admin Login</a>
+  </div>
+
+  <!-- Login Card -->
+  <div class="card">
+    <h2 id="loginTitle">RESIDENT Login</h2>
+
+    <input id="email" type="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Password">
+
+    <button class="signin" onclick="login()">Sign In</button>
+
+    <p class="error" id="errorMsg"></p>
+  </div>
+
+  <script src="app.js"></script>
+
+  <!-- ✅ Default Highlight Script -->
+  <script>
+    window.onload = function () {
+      const firstTab = document.querySelector(".tab");
+      selectRole("RESIDENT", firstTab);
+    };
+  </script>
+
+</body>
+</html>
