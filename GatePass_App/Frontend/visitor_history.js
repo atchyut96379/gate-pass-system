@@ -1,8 +1,5 @@
 async function loadHistory() {
-  const res = await fetch(
-    "http://127.0.0.1:8000/admin-security/visitor-history"
-  );
-
+  const res = await fetch(`${API_BASE}/admin-security/visitor-history`);
   const data = await res.json();
   const table = document.getElementById("historyTable");
 

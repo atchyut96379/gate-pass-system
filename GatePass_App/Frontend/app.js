@@ -1,7 +1,6 @@
-let currentRole = "RESIDENT"; // default role
+let currentRole = "RESIDENT";
 
 function selectRole(role, element) {
-
   currentRole = role;
 
   document.getElementById("loginTitle").innerText = role + " Login";
@@ -10,48 +9,49 @@ function selectRole(role, element) {
     btn.classList.remove("active")
   );
 
-  element.classList.add("active");
+  if (element) element.classList.add("active");
 }
 
 async function login() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
 
-  const response = await fetch("https://gate-pass-system-auhy.onrender.com/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      email: email,
-      password: password
-    })
-  });
+  try {
+    const response = await fetch(`${API_BASE}/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email,
+        password
+      })
+    });
 
-  if (!response.ok) {
-    alert("Invalid login credentials");
-    return;
-  }
+    const data = await response.json();
 
-  const data = await response.json();
+    if (!response.ok) {
+      alert(data.detail || "Invalid login credentials");
+      return;
+    }
 
-  // ✅ SAVE LOGIN DATA (THIS WAS MISSING)
-  localStorage.setItem("userRole", data.role);
-  localStorage.setItem("userName", data.name);
+    localStorage.setItem("userRole", data.role);
+    localStorage.setItem("userName", data.name);
 
-  console.log("Saved role:", localStorage.getItem("userRole"));
+    if (data.role === "ADMIN") {
+      window.location.href = "admin.html";
+    } else if (data.role === "RESIDENT") {
+      window.location.href = "resident.html";
+    } else if (data.role === "SECURITY") {
+      window.location.href = "security.html";
+    }
 
-  // ✅ REDIRECT BASED ON ROLE
-  if (data.role === "ADMIN") {
-    window.location.href = "admin.html";
-  } else if (data.role === "RESIDENT") {
-    window.location.href = "resident.html";
-  } else if (data.role === "SECURITY") {
-    window.location.href = "security.html";
+  } catch (error) {
+    console.error("Login error:", error);
+    alert("Server connection failed.");
   }
 }
-// localStorage.setItem("userRole",data.role);
-// localStorage.setItem("userName",data.name);
+
 window.onload = function () {
   selectRole("RESIDENT");
 };

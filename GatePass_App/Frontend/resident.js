@@ -1,6 +1,5 @@
-const API_BASE = "https://gate-pass-system-auhy.onrender.com";
-
-document.getElementById("visitorForm").addEventListener("submit", async function(e) {
+document.getElementById("visitorForm")
+  .addEventListener("submit", async function(e) {
 
   e.preventDefault();
 
@@ -11,14 +10,7 @@ document.getElementById("visitorForm").addEventListener("submit", async function
   const msg = document.getElementById("otpMsg");
 
   if (!vname || !vphone || !purpose || !flat) {
-    msg.innerText = "Please fill all fields before generating OTP.";
-    msg.style.color = "red";
-    return;
-  }
-
-  const phoneRegex = /^[0-9]{10}$/;
-  if (!phoneRegex.test(vphone)) {
-    msg.innerText = "Enter valid 10-digit phone number.";
+    msg.innerText = "Please fill all fields.";
     msg.style.color = "red";
     return;
   }
@@ -44,13 +36,12 @@ document.getElementById("visitorForm").addEventListener("submit", async function
       return;
     }
 
-    msg.innerText = `OTP: ${result.otp} (valid for 5 mins)`;
+    msg.innerText = `OTP: ${result.otp} (valid 5 mins)`;
     msg.style.color = "green";
-
     document.getElementById("visitorForm").reset();
 
   } catch (error) {
-    msg.innerText = "Server error. Try again.";
+    msg.innerText = "Server error.";
     msg.style.color = "red";
   }
 });
