@@ -10,7 +10,7 @@ document.getElementById("createUserForm")
       password: document.getElementById("password").value.trim(),
       phone: document.getElementById("phone").value.trim(),
       flat: role === "SECURITY"
-        ? null
+        ? ""
         : document.getElementById("flatNumber").value.trim(),
       role: role
     };
@@ -23,13 +23,21 @@ document.getElementById("createUserForm")
       });
 
       const result = await res.json();
+      console.log("Backend Response:", result);
 
       if (!res.ok) {
-        alert(result.detail || "Error creating user");
-        return;
+      alert(result.detail || JSON.stringify(result));
+      return;
+}
+      // ✅ Handle both string and object message
+      if (typeof result.message === "string") {
+      alert(result.message);
+      } else if (typeof result.message === "object") {
+      alert(JSON.stringify(result.message));
+      } else {
+      alert("User created successfully");
       }
 
-      alert(result.message);
       document.getElementById("createUserForm").reset();
 
     } catch (err) {
