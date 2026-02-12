@@ -1,17 +1,19 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
-from .db import create_tables;
-
-# ✅ Correct relative import
+from .db import create_tables
 from .auth import router as auth_router
 
 app = FastAPI()
 
-# CORS
+# ✅ Correct CORS Configuration
+origins = [
+    "https://dashing-brigadeiros-a3f53c.netlify.app"
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -25,8 +27,11 @@ app.include_router(auth_router)
 def home():
     return {"message": "Gate Pass System Backend is Running 🚀"}
 
+# Create tables when app starts
+@app.on_event("startup")
+def startup_event():
+    create_tables()
+
 # Local run
 if __name__ == "__main__":
     uvicorn.run("GatePass_App.backend.main:app", host="0.0.0.0", port=8000)
-
-create_tables()
