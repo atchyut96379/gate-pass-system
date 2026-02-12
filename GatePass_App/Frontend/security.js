@@ -1,4 +1,4 @@
-const API_BASE = "https://gate-pass-system-auhy.onrender.com";
+// const API_BASE = "https://gate-pass-system-auhy.onrender.com";
 async function verifyOtp() {
 
   const data = {
